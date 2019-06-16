@@ -36,6 +36,8 @@ public class LoginController {
     //买家登录
     @GetMapping("/buyer")
     public ResultVO buyer(@RequestParam("openid") String openid,
+                          @RequestParam(value = "username") String userName,
+                          @RequestParam(value = "password") String passWord,
                           HttpServletResponse response) {
 
         //openid和数据库是否匹配

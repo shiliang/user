@@ -1,6 +1,13 @@
 spring:
   application:
-    name: user
+    name: service-user
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://47.102.135.76/sell?characterEncoding=utf8&useSSL=true
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    show-sql: true
   cloud:
     config:
       discovery:
@@ -12,6 +19,9 @@ spring:
           group: order
           content-type: application/json
 
+redis:
+  host: 47.102.135.76
+  port: 6379
 
 eureka:
   client:
