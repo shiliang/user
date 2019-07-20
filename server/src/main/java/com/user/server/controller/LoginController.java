@@ -12,14 +12,12 @@ import com.user.server.utils.ResultVOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -34,27 +32,22 @@ public class LoginController {
     private StringRedisTemplate stringRedisTemplate;
 
     //买家登录
-    @GetMapping("/buyer")
-    public ResultVO buyer(@RequestParam("openid") String openid,
-                          @RequestParam(value = "username") String userName,
+    @RequestMapping(value = "/buyer", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultVO buyer(@RequestParam(value = "username") String userName,
                           @RequestParam(value = "password") String passWord,
-                          HttpServletResponse response) {
+                          HttpServletResponse response,
+                          HttpServletRequest request,
+                          HttpSession session) {
 
-        //openid和数据库是否匹配
-        UserInfo userInfo = userService.findByOpenid(openid);
-        if (userInfo == null) {
-            return ResultVOUtil.error(ResultEnum.LOGIN_FAIL);
-        }
+        session.setAttribute(userName, userName); //属性存的对象的信息
+        //把session写到cookie里面返回给客户端
+        Cookie cookie = new Cookie("USERSESSIONID", session.getId());
+        cookie.setPath("/");
+        cookie.setMaxAge(1800);
+        response.addCookie(cookie);
 
-        //判断角色
 
-        if (RoleEnum.BUYER.getCode() != userInfo.getRole()) {
-            return ResultVOUtil.error(ResultEnum.ROLE_ERROR);
-        }
-
-        //cookie里设置openid=abc
-        CookieUtil.set(response, CookieConstant.OPENID, openid,
-                CookieConstant.EXPIRE);
         return ResultVOUtil.success();
 
 

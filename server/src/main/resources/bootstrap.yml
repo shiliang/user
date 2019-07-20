@@ -8,6 +8,11 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     show-sql: true
+  redis:
+    host: 47.102.135.76
+    port: 6379
+  session:
+    store-type: redis
   cloud:
     config:
       discovery:
@@ -19,9 +24,6 @@ spring:
           group: order
           content-type: application/json
 
-redis:
-  host: 47.102.135.76
-  port: 6379
 
 eureka:
   client:
