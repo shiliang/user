@@ -39,14 +39,14 @@ public class LoginController {
                           HttpServletResponse response,
                           HttpServletRequest request,
                           HttpSession session) {
-
         session.setAttribute(userName, userName); //属性存的对象的信息
+        //设置session的失效时间
+        session.setMaxInactiveInterval(60);
         //把session写到cookie里面返回给客户端
         Cookie cookie = new Cookie("USERSESSIONID", session.getId());
         cookie.setPath("/");
         cookie.setMaxAge(1800);
         response.addCookie(cookie);
-
 
         return ResultVOUtil.success();
 

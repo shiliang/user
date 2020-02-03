@@ -9,23 +9,28 @@ spring:
   jpa:
     show-sql: true
   redis:
-    host: 47.102.135.76
-    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1
+    cluster:
+      nodes: 47.102.135.76:7000, 47.102.135.76:7001, 47.102.135.76:7002, 47.102.135.76:7003, 47.102.135.76:7004, 47.102.135.76:7005
+    timeout: 50000
+
+
   session:
     store-type: redis
+    timeout: 5m
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+
   cloud:
-    config:
+    nacos:
+      config:
+        server-addr: 106.12.17.107:8848
+        namespace: cde176be-0af6-4725-8fcb-edc471b7fa6f
       discovery:
-        enabled: true
-        service-id: CONFIG
-    stream:
-      bindings:
-        myMessage:
-          group: order
-          content-type: application/json
-
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://47.106.174.156:8761/eureka/
+        server-addr: ${spring.cloud.nacos.config.server-addr}
